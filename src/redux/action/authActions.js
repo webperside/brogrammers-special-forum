@@ -1,7 +1,8 @@
 import * as authActionTypes from '../action/types/authActionTypes';
+import { AUTH } from '../../constants';
+import * as storageUtil from '../action/util/storageUtil';
 
 export function loginSuccess(response) {
-	console.log(response);
 	return {
 		type: authActionTypes.LOGIN_SUCCESS,
 		payload: response
@@ -15,16 +16,43 @@ export function logoutSuccess(response) {
 	};
 }
 
-export function login() {
+export function login(username, password, rememberMe) {
 	return function(dispatch) {
-		let url = 'https://bsfapi.herokuapp.com/auth?isAuthenticated=true';
-		return fetch(url).then((response) => response.json()).then((response) => dispatch(loginSuccess(response)));
+		return fetch(AUTH.BASE_API_URL + 'token', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				username,
+				password,
+				rememberMe
+			})
+		})
+			.then((response) => response.json())
+			.then((response) => saveTokensToLocalStorage(response))
+			.then(() => dispatch(loginSuccess(true)));
 	};
+}
+
+export function checkUserAuthenticated() {
+	let accessToken = localStorage.getItem(AUTH.USER_ACCESS_TOKEN);
+	return accessToken !== null;
+}
+
+function saveTokensToLocalStorage(response) {
+	storageUtil.saveItems({
+		[AUTH.USER_ACCESS_TOKEN]: response.accessToken,
+		[AUTH.USER_REFRESH_TOKEN]: response.refreshToken
+	});
+}
+
+function removeTokensFromLocalStorage(){
+	storageUtil.removeItems([ AUTH.USER_ACCESS_TOKEN, AUTH.USER_REFRESH_TOKEN ]);
+
 }
 
 export function logout() {
 	return function(dispatch) {
-		let url = 'https://bsfapi.herokuapp.com/auth?isAuthenticated=false';
-		return fetch(url).then((response) => response.json()).then((response) => dispatch(logoutSuccess(response)));
+		removeTokensFromLocalStorage();
+		return dispatch(logoutSuccess(false));
 	};
 }

@@ -1,19 +1,26 @@
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { Container } from 'reactstrap';
-import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import * as authActions from '../../redux/action/authActions';
 
 const { default: Navi } = require('../navi/Navi');
 
-function App(props) {
-	return (
-		<Container>
-			<Navi />
-			{props.isAuthenticated ? <h3>You got it boi</h3> : <h3>Just click the fucking login button</h3>}
-			{/* <Switch>
-				<Route exact path={[ '/', '/products' ]} component={Dashboard} />
-			</Switch> */}
-		</Container>
-	);
+class App extends Component {
+	componentDidMount() {
+		if (authActions.checkUserAuthenticated()) {
+			this.props.actions.loginUser(true);
+		}
+	}
+
+	render() {
+		return (
+			<Container>
+				<Navi />
+				{this.props.isAuthenticated ? <h3>You got it boi</h3> : <h3>Just click the fucking login button</h3>}
+			</Container>
+		);
+	}
 }
 
 function mapStateToProps(state) {
@@ -22,4 +29,12 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(App);
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: {
+			loginUser: bindActionCreators(authActions.loginSuccess, dispatch)
+		}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
