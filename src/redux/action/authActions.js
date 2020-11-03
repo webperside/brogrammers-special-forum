@@ -16,20 +16,21 @@ export function logoutSuccess(response) {
 	};
 }
 
-export function login(username, password, rememberMe) {
+export function login(tokenRequest) {
+	console.log("iam here")
 	return function(dispatch) {
 		return fetch(AUTH.BASE_API_URL + 'token', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				username,
-				password,
-				rememberMe
+				username:tokenRequest.username,
+				password:tokenRequest.password,
+				rememberMe:tokenRequest.rememberMe
 			})
 		})
 			.then((response) => response.json())
 			.then((response) => saveTokensToLocalStorage(response))
-			.then(() => dispatch(loginSuccess(true)));
+			.then(() => dispatch(loginSuccess(true)))
 	};
 }
 
@@ -52,6 +53,7 @@ function removeTokensFromLocalStorage(){
 
 export function logout() {
 	return function(dispatch) {
+		// logout hisse api ile baglanmayib
 		removeTokensFromLocalStorage();
 		return dispatch(logoutSuccess(false));
 	};

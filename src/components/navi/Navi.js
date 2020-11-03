@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavLink, Button } from 'reactstrap';
-import { NavLink as RRNavLink } from 'react-router-dom';
+import { NavLink as RRNavLink, Link } from 'react-router-dom';
 // import AuthService from '../../services/AuthService';
 import { login, logout } from '../../redux/action/authActions';
 import { connect } from 'react-redux';
@@ -11,12 +11,42 @@ const Navi = (props) => {
 	const toggle = () => setIsOpen(!isOpen);
 
 	// function loginNavi() {
-		// login('webperside', 'w3bp3rs1d3', true);
+	// login('webperside', 'w3bp3rs1d3', true);
 
-		// AuthService.login('webperside', 'w3bp3rs1d3', true)
-		// 	.then((response) => AuthService.saveToLocalStorage(response))
-		// 	.then(login(true));
+	// AuthService.login('webperside', 'w3bp3rs1d3', true)
+	// 	.then((response) => AuthService.saveToLocalStorage(response))
+	// 	.then(login(true));
 	// }
+
+	// function logoutProcess() {
+	// 	logout().then(() => history.push('/'));
+	// }
+
+	const renderIfAuthenticated = () => {
+		return (
+			<Nav className="ml-auto" navbar>
+				<Link to={'/profile'} className="btn btn-outline-success mr-2">
+					Profile
+				</Link>
+				<Button onClick={() => props.logout()} className="btn btn-success mr-2">
+					Logout
+				</Button>
+			</Nav>
+		);
+	};
+
+	const renderIfNotAuthenticated = () => {
+		return (
+			<Nav className="ml-auto" navbar>
+				<Link to={'/login'} className="btn btn-outline-success mr-2">
+					Sign in
+				</Link>
+				<Link to={'/sign-up'} className="btn btn-outline-success mr-2">
+					Sign up
+				</Link>
+			</Nav>
+		);
+	};
 
 	return (
 		<div>
@@ -30,13 +60,7 @@ const Navi = (props) => {
 				</NavLink>
 				<NavbarToggler onClick={toggle} />
 				<Collapse isOpen={isOpen} navbar>
-					<Nav className="ml-auto" navbar>
-						{props.isAuthenticated ? (
-							<Button onClick={() => props.logout()}>Log out</Button>
-						) : (
-							<Button onClick={() => props.login('webperside', 'w3bp3rs1d3', true)}>Log in</Button>
-						)}
-					</Nav>
+					{props.isAuthenticated ? renderIfAuthenticated() : renderIfNotAuthenticated()}
 				</Collapse>
 			</Navbar>
 		</div>
@@ -55,4 +79,4 @@ const mapDispatchToProps = {
 	logout
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(Navi);
+export default connect(mapStateToProps, mapDispatchToProps)(Navi);
