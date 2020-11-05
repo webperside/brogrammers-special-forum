@@ -39,9 +39,9 @@ class App extends Component {
 
 	componentDidMount() {
 		if (authActions.checkUserAuthenticated()) {
-			this.props.actions.loginUser(true);
+			this.props.actions.setAuthenticate(true);
 		} else {
-			this.props.actions.loginUser(false);
+			this.props.actions.setAuthenticate(false);
 		}
 	}
 
@@ -64,7 +64,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
 	return {
 		actions: {
-			loginUser: bindActionCreators(authActions.loginSuccess, dispatch)
+			setAuthenticate: bindActionCreators(authActions.loginSuccess, dispatch)
 		}
 	};
 }

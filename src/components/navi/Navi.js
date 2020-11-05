@@ -10,16 +10,8 @@ const Navi = (props) => {
 
 	const toggle = () => setIsOpen(!isOpen);
 
-	// function loginNavi() {
-	// login('webperside', 'w3bp3rs1d3', true);
-
-	// AuthService.login('webperside', 'w3bp3rs1d3', true)
-	// 	.then((response) => AuthService.saveToLocalStorage(response))
-	// 	.then(login(true));
-	// }
-
-	// function logoutProcess() {
-	// 	logout().then(() => history.push('/'));
+	// const logoutProcess = () => {
+	// 	props.logout()
 	// }
 
 	const renderIfAuthenticated = () => {

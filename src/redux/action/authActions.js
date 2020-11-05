@@ -1,6 +1,9 @@
 import * as authActionTypes from '../action/types/authActionTypes';
 import { AUTH } from '../../constants';
 import * as storageUtil from '../action/util/storageUtil';
+import * as requestUtil from '../action/util/requestUtil';
+
+// for state managment
 
 export function loginSuccess(response) {
 	return {
@@ -16,28 +19,51 @@ export function logoutSuccess(response) {
 	};
 }
 
+// process
+
 export function login(tokenRequest) {
-	console.log("iam here")
 	return function(dispatch) {
-		return fetch(AUTH.BASE_API_URL + 'token', {
+		return fetch(AUTH.URL_LOGIN, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: requestUtil.getHeaders(),
 			body: JSON.stringify({
-				username:tokenRequest.username,
-				password:tokenRequest.password,
-				rememberMe:tokenRequest.rememberMe
+				username: tokenRequest.username,
+				password: tokenRequest.password,
+				rememberMe: tokenRequest.rememberMe
 			})
 		})
-			.then((response) => response.json())
+			.then(requestUtil.handleResponse)
 			.then((response) => saveTokensToLocalStorage(response))
 			.then(() => dispatch(loginSuccess(true)))
+			.catch(requestUtil.handleError);
+	};
+}
+
+export function logout() {
+	return function(dispatch) {
+		return fetch(AUTH.URL_LOGOUT, {
+			method: 'GET',
+			headers: requestUtil.getHeaders(true)
+		})
+			.then((response) => {
+				if (response.ok) {
+					removeTokensFromLocalStorage();
+					dispatch(logoutSuccess(false));
+					return;
+				}
+
+				let text = response.text();
+				throw new Error(text);
+			})
+			.catch(requestUtil.handleError);
 	};
 }
 
 export function checkUserAuthenticated() {
-	let accessToken = localStorage.getItem(AUTH.USER_ACCESS_TOKEN);
-	return accessToken !== null;
+	return localStorage.getItem(AUTH.USER_ACCESS_TOKEN) !== null;
 }
+
+// private util methods
 
 function saveTokensToLocalStorage(response) {
 	storageUtil.saveItems({
@@ -46,15 +72,6 @@ function saveTokensToLocalStorage(response) {
 	});
 }
 
-function removeTokensFromLocalStorage(){
+function removeTokensFromLocalStorage() {
 	storageUtil.removeItems([ AUTH.USER_ACCESS_TOKEN, AUTH.USER_REFRESH_TOKEN ]);
-
-}
-
-export function logout() {
-	return function(dispatch) {
-		// logout hisse api ile baglanmayib
-		removeTokensFromLocalStorage();
-		return dispatch(logoutSuccess(false));
-	};
 }

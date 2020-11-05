@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FormGroup, Button, Form } from 'reactstrap';
+import { Button, Form} from 'reactstrap';
 import TextInput from '../toolbox/TextInput';
 import CheckBox from '../toolbox/CheckBox';
 import * as authActions from '../../redux/action/authActions';
@@ -10,7 +10,11 @@ class LoginUser extends Component {
 	state = {
 		username: null,
 		password: null,
-		rememberMe: false
+		rememberMe: false,
+		error: {
+			username: '',
+			password: ''
+		}
 	};
 
 	onChangeHandle = (event) => {
@@ -25,20 +29,31 @@ class LoginUser extends Component {
 
 	onSubmitHandle = (event) => {
 		event.preventDefault();
-		this.props.actions.login(this.state).then(() => this.props.history.push('/profile'));
+		this.props.actions.login(this.state).then(() => this.props.history.push('/profile')).catch((er) => {
+			er = JSON.parse(er.message);
+			let key = er.code === 104 ? 'username' : 'password';
+			this.setState({
+				error: {
+					[key]: er.message
+				}
+			});
+			this.props.history.push('/login');
+		});
 	};
 
 	render() {
 		return (
 			<Form onSubmit={this.onSubmitHandle}>
-				<FormGroup />
+				{/* <FormGroup>
+				{this.state.error.length === 0 ? null : }
+				</FormGroup> */}
 				<TextInput
 					name="username"
 					label="Username"
 					placeHolder="Username"
 					value={this.state.username}
 					onChange={this.onChangeHandle}
-					// error={errors.productName}
+					error={this.state.error.username}
 				/>
 				<TextInput
 					name="password"
@@ -46,7 +61,7 @@ class LoginUser extends Component {
 					placeHolder="Password"
 					value={this.state.password}
 					onChange={this.onChangeHandle}
-					// error={errors.productName}
+					error={this.state.error.password}
 				/>
 				<CheckBox name="rememberMe" onChange={this.onChangeHandle} defaultChecked={this.state.rememberMe} />
 				<Button type="submit" onSubmit={this.onSubmitHandle}>
