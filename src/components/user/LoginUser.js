@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Form} from 'reactstrap';
+import { Button, Form } from 'reactstrap';
 import TextInput from '../toolbox/TextInput';
 import CheckBox from '../toolbox/CheckBox';
+import Progress from '../common/Progress';
 import * as authActions from '../../redux/action/authActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -14,7 +15,8 @@ class LoginUser extends Component {
 		error: {
 			username: '',
 			password: ''
-		}
+		},
+		progress: false
 	};
 
 	onChangeHandle = (event) => {
@@ -29,24 +31,28 @@ class LoginUser extends Component {
 
 	onSubmitHandle = (event) => {
 		event.preventDefault();
-		this.props.actions.login(this.state).then(() => this.props.history.push('/profile')).catch((er) => {
-			er = JSON.parse(er.message);
-			let key = er.code === 104 ? 'username' : 'password';
-			this.setState({
-				error: {
-					[key]: er.message
-				}
+		this.setState({ progress: true });
+		this.props.actions
+			.login(this.state)
+			.then(() => this.props.history.push('/profile'))
+			.catch((er) => {
+				this.setState({ progress: false });
+				er = JSON.parse(er.message);
+				let key = er.code === 104 ? 'username' : 'password';
+				this.setState({
+					error: {
+						[key]: er.message
+					}
+				});
+				this.props.history.push('/login');
 			});
-			this.props.history.push('/login');
-		});
 	};
 
 	render() {
-		return (
+		return this.state.progress ? (
+			<Progress />
+		) : (
 			<Form onSubmit={this.onSubmitHandle}>
-				{/* <FormGroup>
-				{this.state.error.length === 0 ? null : }
-				</FormGroup> */}
 				<TextInput
 					name="username"
 					label="Username"
@@ -57,6 +63,7 @@ class LoginUser extends Component {
 				/>
 				<TextInput
 					name="password"
+					type="password"
 					label="Password"
 					placeHolder="Password"
 					value={this.state.password}
@@ -64,9 +71,7 @@ class LoginUser extends Component {
 					error={this.state.error.password}
 				/>
 				<CheckBox name="rememberMe" onChange={this.onChangeHandle} defaultChecked={this.state.rememberMe} />
-				<Button type="submit" onSubmit={this.onSubmitHandle}>
-					Sign in
-				</Button>
+				<Button type="submit">Sign in</Button>
 			</Form>
 		);
 	}

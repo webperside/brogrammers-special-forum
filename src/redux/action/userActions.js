@@ -6,9 +6,9 @@ export function signUpUser(user) {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
-			fullName: user.fullName,
-			username: user.username,
-			password: user.password
+			fullName: user.fullName.trim(),
+			username: user.username.trim(),
+			password: user.password.trim()
 		})
 	})
 		.then(handleResponse)

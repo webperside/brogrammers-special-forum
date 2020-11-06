@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import TextInput from '../toolbox/TextInput';
 import * as userActions from '../../redux/action/userActions';
-import { Button } from 'reactstrap';
+import { Button, Form } from 'reactstrap';
+import { REGEX, VALIDATION } from '../../constants';
+import Progress from '../common/Progress';
 
 class SignUpUser extends Component {
 	state = {
@@ -12,60 +14,82 @@ class SignUpUser extends Component {
 			fullName: '',
 			username: '',
 			password: ''
+		},
+		progress: false
+	};
+
+	validateField = (name, value) => {
+		let errorMessage = '';
+		if (value === '') {
+			errorMessage = VALIDATION.EMPTY_FIELD;
+		} else if (name === 'fullName' && !REGEX.FULL_NAME.test(value)) {
+			errorMessage = VALIDATION.WRONG_FULL_NAME;
+		} else if (name !== 'fullName' && !REGEX.USERNAME_PASSWORD.test(value)) {
+			errorMessage = VALIDATION.WRONG_USERNAME_PASSWORD;
 		}
+		return errorMessage;
+	};
+
+	checkNotEmpty = () => {
+		let errors = {};
+
+		errors = {
+			username: this.validateField('username', this.state.username),
+			fullName: this.validateField('fullName', this.state.fullName),
+			password: this.validateField('password', this.state.password)
+		};
+
+		this.setState({ error: errors });
+	};
+
+	isValidated = () => {
+		this.checkNotEmpty();
+		let values = Object.values(this.state.error);
+		return values.filter((item) => item === '').length === values.length;
 	};
 
 	onChangeHandle = (event) => {
 		const { name, value } = event.target;
-		const regex = /^[a-z0-9_]+$/i;
-		// const regexFullName = /[^\p{L}\d\s@#]/u;
-		let errorMessage = '';
 
-		// if(name === 'fullName' && !regexFullName.test(value)){
-		// 	errorMessage = 'Ad yalnız hərflərdən ibarət olmalıdır'
-		// } else
-		if (!regex.test(value)) {
-			errorMessage = 'Bu simvollardan istifadə mümkün deyil';
-		}
+		let errorMessage = this.validateField(name, value);
 
 		this.setState({
 			[name]: value,
 			error: {
+				...this.state.error,
 				[name]: errorMessage
 			}
 		});
 	};
 
-	// validate = () => {
-	// 	let regEx = '/^[a-z0-9]+$/i';
-	// 	let errorFullName = '';
-	// 	let errorUsername = '';
-	// 	let errorPassword = '';
-	// 	if(this.state.fullName === null || this.state.fullName.length < 6 || !regEx.test){
-	// 		errorFullName = '6 sim'
-	// 	}
-	// }
-
-	postRequest = () => {
-		userActions
-			.signUpUser(this.state)
-			.then(() => {
-				this.props.history.push('/login');
-			})
-			.catch((er) => {
-				// er = JSON.parse(er.message);
-				// this.setState({
-				// 	error: {
-				// 		[key]: er.message
-				// 	}
-				// });
-				this.props.history.push('/sign-up');
-			});
+	onSubmitHandle = (event) => {
+		event.preventDefault();
+		if (this.isValidated()) {
+			this.setState({ progress: true });
+			userActions
+				.signUpUser(this.state)
+				.then(() => {
+					this.props.history.push('/login');
+				})
+				.catch((er) => {
+					this.setState({ progress: false });
+					er = JSON.parse(er.message);
+					this.setState({
+						error: {
+							username: er.message
+						}
+					});
+					this.props.history.push('/sign-up');
+				});
+			return;
+		}
 	};
 
 	render() {
-		return (
-			<form>
+		return this.state.progress ? (
+			<Progress />
+		) : (
+			<Form onSubmit={this.onSubmitHandle}>
 				<TextInput
 					name="fullName"
 					label="Full name"
@@ -84,14 +108,15 @@ class SignUpUser extends Component {
 				/>
 				<TextInput
 					name="password"
+					type="password"
 					label="Password"
 					placeHolder="Password"
 					value={this.state.password}
 					onChange={this.onChangeHandle}
 					error={this.state.error.password}
 				/>
-				<Button onClick={() => this.postRequest()}>Sign up</Button>
-			</form>
+				<Button type="submit">Sign up</Button>
+			</Form>
 		);
 	}
 }
