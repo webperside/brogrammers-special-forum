@@ -8,6 +8,7 @@ import AuthenticatedRoute from '../common/AuthenticadetRoute';
 import SignUpUser from '../user/SignUpUser';
 import ProfileUser from '../user/ProfileUser';
 import LoginUser from '../user/LoginUser';
+import Navigator from './Navigator';
 
 const { default: Navi } = require('../navi/Navi');
 
@@ -15,6 +16,7 @@ class App extends Component {
 	renderIfAuthenticated() {
 		return (
 			<div>
+				<Navigator/>
 				<h3>Nobody here, just you and me</h3>
 				<Switch>
 					<AuthenticatedRoute
@@ -39,6 +41,7 @@ class App extends Component {
 
 	componentDidMount() {
 		if (authActions.checkUserAuthenticated()) {
+			authActions.refreshToken();
 			this.props.actions.setAuthenticate(true);
 		} else {
 			this.props.actions.setAuthenticate(false);

@@ -59,6 +59,20 @@ export function logout() {
 	};
 }
 
+export function refreshToken() {
+	return fetch(AUTH.URL_REFRESH, {
+		method: 'POST',
+		headers: requestUtil.getHeaders(),
+		body: JSON.stringify({
+			refreshToken: localStorage.getItem(AUTH.USER_REFRESH_TOKEN),
+			rememberMe: true
+		})
+	})
+		.then(requestUtil.handleResponse)
+		.then((response) => saveTokensToLocalStorage(response))
+		.catch(requestUtil.handleError);
+}
+
 export function checkUserAuthenticated() {
 	return localStorage.getItem(AUTH.USER_ACCESS_TOKEN) !== null;
 }

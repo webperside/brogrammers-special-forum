@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavLink, Button } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, Nav,  NavLink, Button } from 'reactstrap';
 import { NavLink as RRNavLink, Link } from 'react-router-dom';
 // import AuthService from '../../services/AuthService';
 import { login, logout } from '../../redux/action/authActions';
 import { connect } from 'react-redux';
+import ProfileDropdown from './ProfileDropdown';
 
 const Navi = (props) => {
 	const [ isOpen, setIsOpen ] = useState(false);
@@ -23,6 +24,7 @@ const Navi = (props) => {
 				<Button onClick={() => props.logout()} className="btn btn-success mr-2">
 					Logout
 				</Button>
+				<ProfileDropdown/>
 			</Nav>
 		);
 	};
@@ -50,6 +52,11 @@ const Navi = (props) => {
 				>
 					Brogrammers Special Forum
 				</NavLink>
+				<form className="form-inline d-flex justify-content-center md-form form-sm mt-0">
+  					<i className="fas fa-search" aria-hidden="true"></i>
+  					<input className="form-control form-control-sm ml-3 w-100" type="text" placeholder="Search"
+   							 aria-label="Search"/>
+				</form>
 				<NavbarToggler onClick={toggle} />
 				<Collapse isOpen={isOpen} navbar>
 					{props.isAuthenticated ? renderIfAuthenticated() : renderIfNotAuthenticated()}
