@@ -25,7 +25,7 @@ class ProfileDropdown extends Component {
 	};
 
 	setInfoFromSS = () => {
-		let ui = JSON.parse(sessionStorage.getItem('user-detail'));
+		let ui = JSON.parse(localStorage.getItem('user-detail'));
 		this.setState({
 			...this.state,
 			userInfo: ui

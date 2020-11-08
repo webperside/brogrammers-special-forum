@@ -49,7 +49,7 @@ class App extends Component {
 
 	getUserShortInfoUtil = () => {
 		userActions.getUserShortInfo().then((response) => {
-			sessionStorage.setItem('user-detail', JSON.stringify(response));
+			localStorage.setItem('user-detail', JSON.stringify(response));
 		});
 	};
 

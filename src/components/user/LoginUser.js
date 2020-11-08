@@ -34,7 +34,7 @@ class LoginUser extends Component {
 	getUserShortInfoUtil = () => {
 		userActions.getUserShortInfo()
 		.then(response => {
-			sessionStorage.setItem('user-detail', JSON.stringify(response));
+			localStorage.setItem('user-detail', JSON.stringify(response));
 		})
 		.then(() => this.props.history.push('/profile'));
 		
