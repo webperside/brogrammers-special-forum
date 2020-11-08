@@ -1,5 +1,5 @@
 import { USER } from '../../constants';
-import { handleError, handleResponse } from './util/requestUtil';
+import { getHeaders, handleError, handleResponse } from './util/requestUtil';
 
 export function signUpUser(user) {
 	return fetch(USER.URL_SIGN_UP, {
@@ -13,4 +13,13 @@ export function signUpUser(user) {
 	})
 		.then(handleResponse)
 		.catch(handleError);
+}
+
+export function getUserShortInfo(){
+	return fetch(USER.URL_GET_SHORT_INFO,{
+		method: 'GET',
+		headers: getHeaders(true)
+	})
+		.then(handleResponse)
+		.catch(handleError)
 }

@@ -4,6 +4,8 @@ import TextInput from '../toolbox/TextInput';
 import CheckBox from '../toolbox/CheckBox';
 import Progress from '../common/Progress';
 import * as authActions from '../../redux/action/authActions';
+import * as userActions from '../../redux/action/userActions';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -29,12 +31,21 @@ class LoginUser extends Component {
 		});
 	};
 
+	getUserShortInfoUtil = () => {
+		userActions.getUserShortInfo()
+		.then(response => {
+			sessionStorage.setItem('user-detail', JSON.stringify(response));
+		})
+		.then(() => this.props.history.push('/profile'));
+		
+	}
+
 	onSubmitHandle = (event) => {
 		event.preventDefault();
 		this.setState({ progress: true });
 		this.props.actions
 			.login(this.state)
-			.then(() => this.props.history.push('/profile'))
+			.then(() => this.getUserShortInfoUtil())
 			.catch((er) => {
 				this.setState({ progress: false });
 				er = JSON.parse(er.message);

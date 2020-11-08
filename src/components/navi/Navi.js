@@ -5,6 +5,7 @@ import { NavLink as RRNavLink, Link } from 'react-router-dom';
 import { login, logout } from '../../redux/action/authActions';
 import { connect } from 'react-redux';
 import ProfileDropdown from './ProfileDropdown';
+import NotificationDropdown from './NotificationDropdown';
 
 const Navi = (props) => {
 	const [ isOpen, setIsOpen ] = useState(false);
@@ -24,6 +25,7 @@ const Navi = (props) => {
 				<Button onClick={() => props.logout()} className="btn btn-success mr-2">
 					Logout
 				</Button>
+				<NotificationDropdown/>
 				<ProfileDropdown/>
 			</Nav>
 		);
@@ -44,7 +46,7 @@ const Navi = (props) => {
 
 	return (
 		<div>
-			<Navbar color="light" light expand="md">
+			<Navbar style={{backgroundColor:'purple'}} light expand="md">
 				<NavLink
 					tag={RRNavLink}
 					style={{ textDecoration: 'none', fontFamily: 'cursive', fontSize: '1.5em' }}

@@ -12,7 +12,8 @@ export const AUTH = {
 };
 
 export const USER = {
-	URL_SIGN_UP: BASE.API_URL + 'sign-up'
+	URL_SIGN_UP: BASE.API_URL + 'sign-up',
+	URL_GET_SHORT_INFO: BASE.API_URL + 'user-info'
 };
 
 export const REGEX = {
