@@ -27,6 +27,7 @@ class App extends Component {
 	renderIfAuthenticated() {
 		return (
 			<div>
+				<Toolbar />
 				<h3>Nobody here, just you and me</h3>
 				<Switch>
 					<AuthenticatedRoute
@@ -92,7 +93,6 @@ class App extends Component {
 			<Container fluid={true}>
 				<Navi />
 				<Navigator />
-				<Toolbar />
 				{this.props.isAuthenticated ? this.renderIfAuthenticated() : this.renderIfNotAuthenticated()}
 			</Container>
 		);
