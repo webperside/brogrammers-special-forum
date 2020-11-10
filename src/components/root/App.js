@@ -15,6 +15,7 @@ import Progress from '../common/Progress';
 import { AUTH } from '../../constants';
 import AuthenticationService from '../../services/AuthenticationService';
 import UserService from '../../services/UserService';
+import Toolbar from './Toolbar';
 
 const { default: Navi } = require('../navi/Navi');
 
@@ -26,7 +27,6 @@ class App extends Component {
 	renderIfAuthenticated() {
 		return (
 			<div>
-				<Navigator />
 				<h3>Nobody here, just you and me</h3>
 				<Switch>
 					<AuthenticatedRoute
@@ -50,7 +50,7 @@ class App extends Component {
 	}
 
 	handleSuccessResponse = (response) => {
-		response = response.data
+		response = response.data;
 		storageUtil.saveItems({
 			[AUTH.USER_ACCESS_TOKEN]: response.accessToken,
 			[AUTH.USER_REFRESH_TOKEN]: response.refreshToken
@@ -77,9 +77,7 @@ class App extends Component {
 
 	componentDidMount() {
 		if (AuthenticationService.checkUserAuthenticated()) {
-			AuthenticationService.refreshToken()
-				.then(this.handleSuccessResponse)
-				.catch(this.handleFailedResponse);
+			AuthenticationService.refreshToken().then(this.handleSuccessResponse).catch(this.handleFailedResponse);
 			// authActions.refreshToken().then(this.handleSuccessResponse).catch(this.handleFailedResponse);
 		} else {
 			this.props.actions.setAuthentication(false);
@@ -93,6 +91,8 @@ class App extends Component {
 		) : (
 			<Container fluid={true}>
 				<Navi />
+				<Navigator />
+				<Toolbar />
 				{this.props.isAuthenticated ? this.renderIfAuthenticated() : this.renderIfNotAuthenticated()}
 			</Container>
 		);
