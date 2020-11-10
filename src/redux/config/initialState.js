@@ -1,3 +1,7 @@
 export const auth = {
-    isAuthenticated:null
-}
+	isAuthenticated: null
+};
+
+export const user = {
+	userInfo: {}
+};

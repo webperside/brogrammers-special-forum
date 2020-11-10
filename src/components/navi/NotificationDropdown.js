@@ -15,7 +15,7 @@ const NotificationDropdown = (props) => {
 				{/* <FontAwesomeIcon icon={["far","fa-bell"]}></FontAwesomeIcon> */}
                 <FontAwesomeIcon size="lg" icon={faBell} />
                 <Badge className='ml-1' color='success'>4</Badge>
-				{/* <FontAwesomeIcon size='xs' icon={faAngleDown}/> */}
+				<FontAwesomeIcon className='ml-1' size='1x' icon={faAngleDown}/>
 			</DropdownToggle>
 			<DropdownMenu right>
 				<DropdownItem header>Header</DropdownItem>

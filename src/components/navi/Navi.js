@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Collapse, Navbar, NavbarToggler, Nav,  NavLink, Button } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, Nav, NavLink } from 'reactstrap';
 import { NavLink as RRNavLink, Link } from 'react-router-dom';
 // import AuthService from '../../services/AuthService';
-import { login, logout } from '../../redux/action/authActions';
 import { connect } from 'react-redux';
 import ProfileDropdown from './ProfileDropdown';
 import NotificationDropdown from './NotificationDropdown';
@@ -12,21 +11,11 @@ const Navi = (props) => {
 
 	const toggle = () => setIsOpen(!isOpen);
 
-	// const logoutProcess = () => {
-	// 	props.logout()
-	// }
-
 	const renderIfAuthenticated = () => {
 		return (
 			<Nav className="ml-auto" navbar>
-				<Link to={'/profile'} className="btn btn-outline-success mr-2">
-					Profile
-				</Link>
-				<Button onClick={() => props.logout()} className="btn btn-success mr-2">
-					Logout
-				</Button>
-				<NotificationDropdown/>
-				<ProfileDropdown/>
+				<NotificationDropdown />
+				<ProfileDropdown />
 			</Nav>
 		);
 	};
@@ -45,39 +34,35 @@ const Navi = (props) => {
 	};
 
 	return (
-		<div>
-			<Navbar style={{backgroundColor:'purple'}} light expand="md">
-				<NavLink
-					tag={RRNavLink}
-					style={{ textDecoration: 'none', fontFamily: 'cursive', fontSize: '1.5em' }}
-					to={'/'}
-				>
-					Brogrammers Special Forum
-				</NavLink>
-				<form className="form-inline d-flex justify-content-center md-form form-sm mt-0">
-  					<i className="fas fa-search" aria-hidden="true"></i>
-  					<input className="form-control form-control-sm ml-3 w-100" type="text" placeholder="Search"
-   							 aria-label="Search"/>
-				</form>
-				<NavbarToggler onClick={toggle} />
-				<Collapse isOpen={isOpen} navbar>
-					{props.isAuthenticated ? renderIfAuthenticated() : renderIfNotAuthenticated()}
-				</Collapse>
-			</Navbar>
-		</div>
+		<Navbar style={{ backgroundColor: 'purple' }} light expand="md">
+			<NavLink
+				tag={RRNavLink}
+				style={{ textDecoration: 'none', fontFamily: 'cursive', fontSize: '1.5em' }}
+				to={'/'}
+			>
+				Brogrammers Special Forum
+			</NavLink>
+			<form className="form-inline d-flex justify-content-center md-form form-sm mt-0">
+				<i className="fas fa-search" aria-hidden="true" />
+				<input
+					className="form-control form-control-sm ml-3 w-100"
+					type="text"
+					placeholder="Search"
+					aria-label="Search"
+				/>
+			</form>
+			<NavbarToggler onClick={toggle} />
+			<Collapse isOpen={isOpen} navbar>
+				{props.isAuthenticated ? renderIfAuthenticated() : renderIfNotAuthenticated()}
+			</Collapse>
+		</Navbar>
 	);
 };
 
 function mapStateToProps(state) {
-	// console.log(state.authReducer,"mapStateToProps");
 	return {
 		isAuthenticated: state.authReducer
 	};
 }
 
-const mapDispatchToProps = {
-	login,
-	logout
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Navi);
+export default connect(mapStateToProps)(Navi);

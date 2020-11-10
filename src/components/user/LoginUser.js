@@ -5,9 +5,13 @@ import CheckBox from '../toolbox/CheckBox';
 import Progress from '../common/Progress';
 import * as authActions from '../../redux/action/authActions';
 import * as userActions from '../../redux/action/userActions';
+import * as storageUtil from '../../redux/action/util/storageUtil';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import AuthenticationService from '../../services/AuthenticationService';
+import UserService from '../../services/UserService';
+import { AUTH } from '../../constants';
 
 class LoginUser extends Component {
 	state = {
@@ -31,32 +35,40 @@ class LoginUser extends Component {
 		});
 	};
 
-	getUserShortInfoUtil = () => {
-		userActions.getUserShortInfo()
-		.then(response => {
-			localStorage.setItem('user-detail', JSON.stringify(response));
-		})
-		.then(() => this.props.history.push('/profile'));
-		
-	}
+	handleSuccessResponse = (response) => {
+		response = response.data;
+		storageUtil.saveItems({
+			[AUTH.USER_ACCESS_TOKEN]: response.accessToken,
+			[AUTH.USER_REFRESH_TOKEN]: response.refreshToken
+		});
+
+		UserService.getUserShortInfo().then((res) => {
+			this.props.actions.setUserInfo(res.data);
+			this.props.history.push('/');
+			this.props.actions.setAuthentication(true);
+		});
+	};
+
+	handleFailedResponse = (er) => {
+		er = er.response.data;
+		let key = er.code === 104 ? 'username' : 'password';
+		this.setState({
+			error: {
+				[key]: er.message
+			},
+			progress: false
+		});
+		this.props.history.push('/login');
+	};
 
 	onSubmitHandle = (event) => {
 		event.preventDefault();
-		this.setState({ progress: true });
-		this.props.actions
-			.login(this.state)
-			.then(() => this.getUserShortInfoUtil())
-			.catch((er) => {
-				this.setState({ progress: false });
-				er = JSON.parse(er.message);
-				let key = er.code === 104 ? 'username' : 'password';
-				this.setState({
-					error: {
-						[key]: er.message
-					}
-				});
-				this.props.history.push('/login');
-			});
+		this.setState({
+			...this.state,
+			progress: true
+		});
+
+		AuthenticationService.login(this.state).then(this.handleSuccessResponse).catch(this.handleFailedResponse);
 	};
 
 	render() {
@@ -91,7 +103,8 @@ class LoginUser extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		actions: {
-			login: bindActionCreators(authActions.login, dispatch)
+			setAuthentication: bindActionCreators(authActions.setAuthentication, dispatch),
+			setUserInfo: bindActionCreators(userActions.getUserShortInfoSuccess, dispatch)
 		}
 	};
 }

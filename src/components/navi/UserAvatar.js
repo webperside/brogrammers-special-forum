@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 class UserAvatar extends Component {
 	getInitials = () => {
@@ -20,6 +21,7 @@ class UserAvatar extends Component {
 						textOverflow: 'ellipsis',
 						lineHeight: '40px',
 						textAlign: 'center',
+						fontWeight:"bold",
 						borderRadius: '100%',
 						maxWidth: '40px',
 						width: '40px',
@@ -36,4 +38,10 @@ class UserAvatar extends Component {
 	}
 }
 
-export default UserAvatar;
+function mapStateToProps(state){
+	return {
+		userInfo : state.userShortInfoReducer
+	}
+}
+
+export default connect(mapStateToProps)(UserAvatar);

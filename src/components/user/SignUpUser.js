@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import TextInput from '../toolbox/TextInput';
-import * as userActions from '../../redux/action/userActions';
 import { Button, Form } from 'reactstrap';
 import { REGEX, VALIDATION } from '../../constants';
 import Progress from '../common/Progress';
+import UserService from '../../services/UserService';
 
 class SignUpUser extends Component {
 	state = {
@@ -62,26 +62,28 @@ class SignUpUser extends Component {
 		});
 	};
 
+	handleSuccessResponse = (response) => {
+		this.props.history.push('/login');
+	};
+
+	handleFailedResponse = (er) => {
+		this.setState({ progress: false });
+		er = er.response.data;
+		this.setState({
+			error: {
+				username: er.message
+			},
+			progress: false
+		});
+		this.props.history.push('/sign-up');
+	};
+
 	onSubmitHandle = (event) => {
 		event.preventDefault();
 		if (this.isValidated()) {
 			this.setState({ progress: true });
-			userActions
-				.signUpUser(this.state)
-				.then(() => {
-					this.props.history.push('/login');
-				})
-				.catch((er) => {
-					this.setState({ progress: false });
-					er = JSON.parse(er.message);
-					this.setState({
-						error: {
-							username: er.message
-						}
-					});
-					this.props.history.push('/sign-up');
-				});
-			return;
+			UserService.signUp(this.state).then(this.handleSuccessResponse).catch(this.handleFailedResponse);
+			return ;
 		}
 	};
 

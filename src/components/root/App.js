@@ -13,6 +13,8 @@ import LoginUser from '../user/LoginUser';
 import Navigator from './Navigator';
 import Progress from '../common/Progress';
 import { AUTH } from '../../constants';
+import AuthenticationService from '../../services/AuthenticationService';
+import UserService from '../../services/UserService';
 
 const { default: Navi } = require('../navi/Navi');
 
@@ -47,32 +49,40 @@ class App extends Component {
 		);
 	}
 
-	getUserShortInfoUtil = () => {
-		userActions.getUserShortInfo().then((response) => {
-			localStorage.setItem('user-detail', JSON.stringify(response));
+	handleSuccessResponse = (response) => {
+		response = response.data
+		storageUtil.saveItems({
+			[AUTH.USER_ACCESS_TOKEN]: response.accessToken,
+			[AUTH.USER_REFRESH_TOKEN]: response.refreshToken
+		});
+		UserService.getUserShortInfo().then((response) => {
+			this.props.actions.setUserInfo(response.data);
+			this.props.actions.setAuthentication(true);
+			this.setState({ progress: false });
 		});
 	};
 
+	handleFailedResponse = (er) => {
+		this.setState({ progress: false });
+		er = er.response.data;
+		console.log(er);
+
+		if (er.status === 403) {
+			this.props.history.push('/login');
+			this.props.actions.setAuthentication(false);
+			storageUtil.removeItems([ AUTH.USER_ACCESS_TOKEN, AUTH.USER_REFRESH_TOKEN ]);
+			return;
+		}
+	};
+
 	componentDidMount() {
-		if (authActions.checkUserAuthenticated()) {
-			authActions
-				.refreshToken()
-				.then(() => {
-					this.props.actions.setAuthenticate(true);
-					this.getUserShortInfoUtil();
-				})
-				.catch((er) => {
-					er = JSON.parse(er.message);
-					if (er.status === 403) {
-						this.props.history.push('/login');
-						this.props.actions.setAuthenticate(false);
-						storageUtil.removeItems([ AUTH.USER_ACCESS_TOKEN, AUTH.USER_REFRESH_TOKEN ]);
-						return;
-					}
-				})
-				.then(() => this.setState({ progress: false }));
+		if (AuthenticationService.checkUserAuthenticated()) {
+			AuthenticationService.refreshToken()
+				.then(this.handleSuccessResponse)
+				.catch(this.handleFailedResponse);
+			// authActions.refreshToken().then(this.handleSuccessResponse).catch(this.handleFailedResponse);
 		} else {
-			this.props.actions.setAuthenticate(false);
+			this.props.actions.setAuthentication(false);
 			this.setState({ progress: false });
 		}
 	}
@@ -91,14 +101,16 @@ class App extends Component {
 
 function mapStateToProps(state) {
 	return {
-		isAuthenticated: state.authReducer
+		isAuthenticated: state.authReducer,
+		userInfo: state.userShortInfoReducer
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
 		actions: {
-			setAuthenticate: bindActionCreators(authActions.loginSuccess, dispatch)
+			setAuthentication: bindActionCreators(authActions.setAuthentication, dispatch),
+			setUserInfo: bindActionCreators(userActions.getUserShortInfoSuccess, dispatch)
 		}
 	};
 }
