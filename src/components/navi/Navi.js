@@ -34,15 +34,20 @@ const Navi = (props) => {
 	};
 
 	return (
-		<Navbar style={{ backgroundColor: 'purple' }} light expand="md">
+		<Navbar className="shadow-lg rounded pr-5 pl-5" style={{ backgroundColor: '#1a1148' }} dark expand="md">
 			<NavLink
 				tag={RRNavLink}
-				style={{ textDecoration: 'none', fontFamily: 'cursive', fontSize: '1.5em' }}
+				style={{
+					textDecoration: 'none',
+					fontFamily: 'cursive',
+					color: '#FFF'
+				}}
 				to={'/'}
+				className="text-wrap"
 			>
-				Brogrammers Special Forum
+				<span style={{ fontWeight: 'bold', fontSize: '1.5em' }}>BSForum</span>
 			</NavLink>
-			<form className="form-inline d-flex justify-content-center md-form form-sm mt-0">
+			{/* <form className="form-inline d-flex justify-content-center md-form form-sm mt-0">
 				<i className="fas fa-search" aria-hidden="true" />
 				<input
 					className="form-control form-control-sm ml-3 w-100"
@@ -50,8 +55,8 @@ const Navi = (props) => {
 					placeholder="Search"
 					aria-label="Search"
 				/>
-			</form>
-			<NavbarToggler onClick={toggle} />
+			</form> */}
+			<NavbarToggler style={{ color: 'white' }} onClick={toggle} />
 			<Collapse isOpen={isOpen} navbar>
 				{props.isAuthenticated ? renderIfAuthenticated() : renderIfNotAuthenticated()}
 			</Collapse>

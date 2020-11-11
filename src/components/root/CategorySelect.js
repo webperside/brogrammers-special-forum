@@ -60,11 +60,12 @@ class CategorySelect extends Component {
 				toggle={() => {
 					this.setState({ btnDropright: !this.state.btnDropright });
 				}}
+				style={{display:"inline-block"}}
 			>
 				<DropdownToggle
 					caret
-					className="bg-transparent shadow-none"
-					style={{ color: 'purple', borderColor: 'transparent' }}
+					className="bg-transparent shadow-none border-bottom"
+					style={{ color: 'white', borderColor: 'transparent', fontSize:"1rem" }}
 					onClick={() => this.getCategories()}
 				>
 					Bütün kateqoriyalar<FontAwesomeIcon className="ml-1" size="1x" icon={faAngleRight} />

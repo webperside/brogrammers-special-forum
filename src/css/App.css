@@ -1,3 +1,23 @@
 .dropdown-toggle::after {
-    display: none!important;
+	display: none !important;
 }
+
+.breadcrumb {
+	background-color: #221178 !important;
+}
+
+nav > ol > li > a {
+	color: white;
+}
+
+nav > ol > li > a:hover {
+	color: white !important;
+}
+
+/* .btn-group > .btn {
+	border: 0;
+} */
+
+/* .table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+	background-color:#f1f1f1;
+ } */

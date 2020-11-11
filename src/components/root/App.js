@@ -16,6 +16,7 @@ import { AUTH } from '../../constants';
 import AuthenticationService from '../../services/AuthenticationService';
 import UserService from '../../services/UserService';
 import Toolbar from './Toolbar';
+import AllTitleTable from '../title/AllTitleTable';
 
 const { default: Navi } = require('../navi/Navi');
 
@@ -27,8 +28,6 @@ class App extends Component {
 	renderIfAuthenticated() {
 		return (
 			<div>
-				<Toolbar />
-				<h3>Nobody here, just you and me</h3>
 				<Switch>
 					<AuthenticatedRoute
 						isAuthenticated={this.props.isAuthenticated}
@@ -93,6 +92,8 @@ class App extends Component {
 			<Container fluid={true}>
 				<Navi />
 				<Navigator />
+				<Toolbar />
+				<AllTitleTable />
 				{this.props.isAuthenticated ? this.renderIfAuthenticated() : this.renderIfNotAuthenticated()}
 			</Container>
 		);
