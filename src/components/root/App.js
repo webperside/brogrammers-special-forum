@@ -16,7 +16,7 @@ import { AUTH } from '../../constants';
 import AuthenticationService from '../../services/AuthenticationService';
 import UserService from '../../services/UserService';
 import Toolbar from './Toolbar';
-import AllTitleTable from '../title/AllTitleTable';
+import AllTitleTable from '../title/TitleListTable';
 
 const { default: Navi } = require('../navi/Navi');
 

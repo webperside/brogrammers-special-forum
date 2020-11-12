@@ -6,7 +6,7 @@ import '../../css/App.css';
 class Toolbar extends Component {
 	render() {
 		return (
-			<div className="pl-5">
+			<div className="pl-2">
 				<CategorySelect />
 				<ButtonGroup className="ml-2" size="lg">
 					<Button className="bg-transparent">TREND</Button>

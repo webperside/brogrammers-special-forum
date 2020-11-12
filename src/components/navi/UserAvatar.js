@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 class UserAvatar extends Component {
 	getInitials = () => {
@@ -13,7 +12,7 @@ class UserAvatar extends Component {
 
 	render() {
 		return (
-			<div style={{ display: 'inline-block', color: 'white' }}>
+			<div style={{ display: 'inline-block', color: 'white', paddingLeft:"5px" }}>
 				<div
 					style={{
 						boxSizing: 'border-box',
@@ -38,10 +37,10 @@ class UserAvatar extends Component {
 	}
 }
 
-function mapStateToProps(state){
-	return {
-		userInfo : state.userShortInfoReducer
-	}
-}
+// function mapStateToProps(state){
+// 	return {
+// 		userInfo : state.userShortInfoReducer
+// 	}
+// }
 
-export default connect(mapStateToProps)(UserAvatar);
+export default UserAvatar;

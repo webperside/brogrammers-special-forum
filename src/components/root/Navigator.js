@@ -19,7 +19,7 @@ class Navigator extends Component {
 						fontWeight: 'bold'
 					}}
 				>
-					<BreadcrumbItem className="ml-5">
+					<BreadcrumbItem className="ml-2">
 						<Link to="/">Home</Link>
 					</BreadcrumbItem>
 					<BreadcrumbItem>

@@ -34,7 +34,7 @@ const Navi = (props) => {
 	};
 
 	return (
-		<Navbar className="shadow-lg rounded pr-5 pl-5" style={{ backgroundColor: '#1a1148' }} dark expand="md">
+		<Navbar className="shadow-lg rounded pr-2 pl-2" style={{ backgroundColor: '#1a1148' }} dark expand="md">
 			<NavLink
 				tag={RRNavLink}
 				style={{

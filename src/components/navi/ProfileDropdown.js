@@ -41,7 +41,7 @@ class ProfileDropdown extends Component {
 		return (
 			<ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
 				<DropdownToggle caret className="bg-transparent shadow-none" style={{ borderColor: 'transparent' }}>
-					<UserAvatar />
+					<UserAvatar userInfo={this.props.userInfo}/>
 					<div
 						className="pl-2"
 						style={{ display: 'inline', height: '40px', lineHeight: '40px', color: 'white' }}

@@ -1,7 +1,7 @@
 import Axios from 'axios';
-import { CATEGORY } from '../constants';
+import { TITLE } from '../constants';
 
-class CategoryService {
+class TitleService {
 	constructor() {
 		this.setupResponseInteceptors();
 	}
@@ -17,13 +17,14 @@ class CategoryService {
 		);
 	}
 
-	getAll() {
-		return Axios.get(CATEGORY.URL_GET_ALL, {
+	getTitles(p, cid) {
+		return Axios.get(TITLE.URL_GET_ALL, {
 			params: {
-                sort: "name"
+				page: p,
+				categoryId: cid
 			}
 		});
 	}
 }
 
-export default new CategoryService();
+export default new TitleService();

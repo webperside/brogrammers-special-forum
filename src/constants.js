@@ -20,6 +20,11 @@ export const CATEGORY = {
 	URL_GET_ALL: BASE.API_URL + 'categories'
 };
 
+export const TITLE = {
+	URL_GET_ALL: BASE.API_URL + 'titles',
+	URL_GET_ALL_TREND : BASE.API_URL + 'titles/trend'
+}
+
 export const REGEX = {
 	FULL_NAME: /^([[\S][A-Za-z\u00C7\u00E7\u018F\u0259\u011E\u011F\u0049\u0131\u0130\u0069\u00D6\u00F6\u015E\u015F\u00DC\u00FC\s]*)$/,
 	USERNAME_PASSWORD: /^[a-z0-9_]+$/i

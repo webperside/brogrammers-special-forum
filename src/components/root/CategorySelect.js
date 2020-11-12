@@ -15,10 +15,9 @@ class CategorySelect extends Component {
 
 	handleSuccessResponse = (response) => {
 		response = response.data;
-		console.log(response.content);
 		this.setState({
-			categories: response.content,
-			filterCategories: response.content,
+			categories: response,
+			filterCategories: response,
 			progress: false
 		});
 	};
