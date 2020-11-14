@@ -41,7 +41,7 @@ class TitleList extends Component {
 		) : (
 			this.state.titles.map((title) => {
 				return (
-					<div className="d-flex flex-column bd-highlight pl-5 pr-5" key={title.id}>
+					<div className="d-flex flex-column bd-highlight pl-2 pr-2" key={title.id}>
 						<div className="bd-highlight">
 							<div className="d-flex bd-highlight" style={{ fontSize: '20px', color: '#1a1148' }}>
 								<div className="flex-grow-1 bd-highlight">
@@ -68,7 +68,7 @@ class TitleList extends Component {
 									) : null}
 									<div>
 										<div className="float-right p-1">
-											{title.user.fullName} 
+											<span className="pr-1">{title.user.fullName}</span>
 											<UserAvatar userInfo={title.user} />
 										</div>
 									</div>
