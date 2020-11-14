@@ -16,7 +16,7 @@ import { AUTH } from '../../constants';
 import AuthenticationService from '../../services/AuthenticationService';
 import UserService from '../../services/UserService';
 import Toolbar from './Toolbar';
-import AllTitleTable from '../title/TitleListTable';
+import TitleList from '../title/TitleList';
 
 const { default: Navi } = require('../navi/Navi');
 
@@ -78,7 +78,6 @@ class App extends Component {
 	componentDidMount() {
 		if (AuthenticationService.checkUserAuthenticated()) {
 			AuthenticationService.refreshToken().then(this.handleSuccessResponse).catch(this.handleFailedResponse);
-			// authActions.refreshToken().then(this.handleSuccessResponse).catch(this.handleFailedResponse);
 		} else {
 			this.props.actions.setAuthentication(false);
 			this.setState({ progress: false });
@@ -93,7 +92,7 @@ class App extends Component {
 				<Navi />
 				<Navigator />
 				<Toolbar />
-				<AllTitleTable />
+				<TitleList />
 				{this.props.isAuthenticated ? this.renderIfAuthenticated() : this.renderIfNotAuthenticated()}
 			</Container>
 		);

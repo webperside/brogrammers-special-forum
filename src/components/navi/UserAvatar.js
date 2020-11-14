@@ -12,20 +12,20 @@ class UserAvatar extends Component {
 
 	render() {
 		return (
-			<div style={{ display: 'inline-block', color: 'white', paddingLeft:"5px" }}>
+			<div style={{ display: 'inline-block', color: 'white'}}>
 				<div
 					style={{
 						boxSizing: 'border-box',
 						whiteSpace: 'nowrap',
 						textOverflow: 'ellipsis',
-						lineHeight: '40px',
+						lineHeight: this.props.size ? this.props.size : '40px',
 						textAlign: 'center',
 						fontWeight:"bold",
 						borderRadius: '100%',
-						maxWidth: '40px',
-						width: '40px',
-						maxHeight: '40px',
-						height: '40px',
+						maxWidth: this.props.size ? this.props.size : '40px',
+						width: this.props.size ? this.props.size : '40px',
+						maxHeight: this.props.size ? this.props.size : '40px',
+						height: this.props.size ? this.props.size : '40px',
 						backgroundColor: this.props.userInfo.avatar
 						// 'rgb(231, 76, 60)'
 					}}
