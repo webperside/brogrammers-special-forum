@@ -14,9 +14,22 @@ nav > ol > li > a:hover {
 	color: white !important;
 }
 
+.table td, .table th {
+	padding:0.2rem!important
+}
+
+.table thead th {
+	vertical-align: top!important;
+}
+
 /* .btn-group > .btn {
-	border: 0;
+	border: 5px solid transparent;
 } */
+
+.btn-group > .btn:focus {
+	outline: none!important;
+	box-shadow: none!important;
+}
 
 /* .table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
 	background-color:#f1f1f1;

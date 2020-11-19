@@ -1,0 +1,2 @@
+export const GET_TITLES = "GET_TITLES";
+export const TITLE_LOAD_PROGRESS = "TITLE_LOAD_PROGRESS";

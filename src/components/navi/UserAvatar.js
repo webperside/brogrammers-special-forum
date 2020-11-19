@@ -26,7 +26,8 @@ class UserAvatar extends Component {
 						width: this.props.size ? this.props.size : '40px',
 						maxHeight: this.props.size ? this.props.size : '40px',
 						height: this.props.size ? this.props.size : '40px',
-						backgroundColor: this.props.userInfo.avatar
+						backgroundColor: this.props.userInfo.avatar,
+						fontSize: this.props.fontSize ? this.props.fontSize : '16px'
 						// 'rgb(231, 76, 60)'
 					}}
 				>

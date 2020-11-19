@@ -1,135 +1,87 @@
 import React, { Component } from 'react';
-import { Badge } from 'reactstrap';
+import { connect } from 'react-redux';
+import { Table } from 'reactstrap';
 import '../../css/App.css';
-import TitleService from '../../services/TitleService';
 import Progress from '../common/Progress';
 import UserAvatar from '../navi/UserAvatar';
+import * as titleActions from '../../redux/action/titleActions';
+import { bindActionCreators } from 'redux';
+import * as commonUtil from '../../redux/action/util/commonUtil';
 
 class TitleList extends Component {
 	state = {
-		titles: [],
-		progress: true
+		p: 0
 	};
 
-	handleSuccessResponse = (response) => {
-		response = response.data;
-		this.setState({
-			titles: response.content,
-			progress: false
-		});
-	};
-
-	handleFailedResponse = (er) => {
-		er = er.response.data;
-		console.log(er);
-		this.setState({
-			progress: false
-		});
-	};
-
-	getTitles = (p, cid) => {
-		TitleService.getTitles(p, cid).then(this.handleSuccessResponse).catch(this.handleFailedResponse);
-	};
+	// page deyishende getTitles istifade olunacaq, cid reducerden gelir
 
 	componentDidMount() {
-		this.getTitles();
+		this.props.actions.getTitles(0, this.props.cid);
 	}
 
 	render() {
-		return this.state.progress ? (
+		return this.props.titleLoadProgress ? (
 			<Progress />
 		) : (
-			this.state.titles.map((title) => {
-				return (
-					<div className="d-flex flex-column bd-highlight pl-2 pr-2" key={title.id}>
-						<div className="bd-highlight">
-							<div className="d-flex bd-highlight" style={{ fontSize: '20px', color: '#1a1148' }}>
-								<div className="flex-grow-1 bd-highlight">
-									<div>
-										{title.name} | {title.categories}
-									</div>
-									<div className="float-left pr-1">
-										<Badge style={{ fontSize: '14px' }} color="success" pill>
-											Rəy sayı - {title.repliesNumber}
-										</Badge>
-									</div>
-
-									<div className="float-left pr-1">
-										<Badge style={{ fontSize: '14px' }} color="info" pill>
-											Baxış sayı - {title.seenCount}
-										</Badge>
-									</div>
-									{title.isTrend ? (
-										<div className="float-left">
-											<Badge style={{ fontSize: '14px' }} color="danger" pill>
-												Trend
-											</Badge>
-										</div>
-									) : null}
-									<div>
-										<div className="float-right p-1">
-											<span className="pr-1">{title.user.fullName}</span>
-											<UserAvatar userInfo={title.user} />
-										</div>
-									</div>
-									{/* className="p-2 bd-highlight" */}
-								</div>
-							</div>
-						</div>
-						<div className="bd-highlight">
-						<hr />
-
-						</div>
-					</div>
-				);
-			})
-		);
-	}
-}
-
-export default TitleList;
-
-{
-	/* <div className="pl-2 pr-2" style={{ fontSize: '18px' }}>
-				<Table hover borderless style={{ color: '#1a1148'}}>
+			<div className="pl-2 pr-2" style={{ fontSize: '20px' }}>
+				<Table hover borderless style={{ color: '#1a1148' }}>
 					<thead>
 						<tr>
-							<th>TREND</th>
-							<th>Başlıq | Kateqoriya</th>
+							<th style={{ width: '5%', textAlign: 'center' }}>Trend</th>
+							<th style={{ width: '80%', textAlign: 'center' }}>Başlıq | Kateqoriya</th>
+							<th style={{ textAlign: 'center' }}>Rəy sayı</th>
+							<th style={{ textAlign: 'center' }}>Baxış sayı</th>
 						</tr>
 					</thead>
 					<tbody>
-						{this.state.titles.map((title) => {
+						{this.props.titles.map((title) => {
 							return (
 								<tr key={title.id}>
-									<th scope="row">{title.isTrend}</th>
+									<th style={{ textAlign: 'center' }} scope="row">
+										{title.isTrend}
+									</th>
 									<td>
-										{title.name} | {title.categories}
-										<div>
-											<div className="float-left">
-												<Badge style={{ fontSize: '14px' }} color="success" pill>
-													{' '}
-													Rəy sayı - {title.repliesNumber}
-												</Badge>
-											</div>
+										<span>
+											{title.name} | {title.categories}
+										</span>
+										<div
+											className="float-right p-1"
+											style={{ display: 'inline-block', fontSize: '16px' }}
+										>
+											<div style={{ display: 'inline-block' }}>
+												<span className="pr-1">{commonUtil.getDate(title.createdAt)}</span>
 
-											<div className="float-left">
-												<Badge style={{ fontSize: '14px' }} color="info" pill>
-													{' '}
-													Baxış sayı - {title.seenCount}
-												</Badge>
-											</div>
-
-											<div className="float-right p-1">
 												<span className="pr-1">{title.user.fullName}</span>
-												<UserAvatar userInfo={title.user} />
+												<UserAvatar fontSize="10px" size="28px" userInfo={title.user} />
 											</div>
 										</div>
 									</td>
+									<td style={{ textAlign: 'center' }}>{title.repliesNumber}</td>
+									<td style={{ textAlign: 'center' }}>{title.seenCount}</td>
 								</tr>
 							);
 						})}
 					</tbody>
 				</Table>
-			</div> */
+			</div>
+		);
+	}
 }
+
+function mapStateToProps(state) {
+	return {
+		titles: state.titleReducer,
+		titleLoadProgress: state.titleLoadProgressReducer,
+		cid: state.selectCategoryReducer
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: {
+			getTitles: bindActionCreators(titleActions.getTitles, dispatch)
+		}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TitleList);

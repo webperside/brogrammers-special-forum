@@ -4,6 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import Progress from '../common/Progress';
 import CategoryService from '../../services/CategoryService';
+import { connect } from 'react-redux';
+import * as categoryActions from '../../redux/action/categoryActions';
+import * as titleActions from '../../redux/action/titleActions';
+import { bindActionCreators } from 'redux';
 
 class CategorySelect extends Component {
 	state = {
@@ -30,6 +34,10 @@ class CategorySelect extends Component {
 	getCategories = () => {
 		if (this.state.categories.length === 0) {
 			CategoryService.getAll().then(this.handleSuccessResponse).catch(this.handleFailedResponse);
+		} else {
+			this.setState({
+				filterCategories : this.state.categories
+			})
 		}
 	};
 
@@ -51,6 +59,13 @@ class CategorySelect extends Component {
 		});
 	};
 
+	onClickSelectCategory = (cid) => {
+		if (cid !== this.props.cid) {
+			this.props.actions.selectCategory(cid);
+			this.props.actions.getTitles(0, cid);// category ilk sechildiyi haldi, ona gore page = 0
+		}
+	};
+
 	render() {
 		return (
 			<Dropdown
@@ -59,12 +74,12 @@ class CategorySelect extends Component {
 				toggle={() => {
 					this.setState({ btnDropright: !this.state.btnDropright });
 				}}
-				style={{display:"inline-block"}}
+				style={{ display: 'inline-block' }}
 			>
 				<DropdownToggle
 					caret
 					className="bg-transparent shadow-none border-bottom"
-					style={{ color: 'white', borderColor: 'transparent', fontSize:"1rem" }}
+					style={{ color: 'white', borderColor: 'transparent', fontSize: '1rem' }}
 					onClick={() => this.getCategories()}
 				>
 					Bütün kateqoriyalar<FontAwesomeIcon className="ml-1" size="1x" icon={faAngleRight} />
@@ -87,7 +102,11 @@ class CategorySelect extends Component {
 					) : (
 						this.state.filterCategories.map((category) => {
 							return (
-								<DropdownItem key={category.id} className="p-1">
+								<DropdownItem
+									key={category.id}
+									className="p-1"
+									onClick={() => this.onClickSelectCategory(category.id)}
+								>
 									<div className="d-flex bd-highlight">
 										<div className="pl-2 pr-2 flex-grow-1 bd-highlight">
 											<span
@@ -115,4 +134,19 @@ class CategorySelect extends Component {
 	}
 }
 
-export default CategorySelect;
+function mapStateToProps(state) {
+	return {
+		cid: state.selectCategoryReducer
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: {
+			selectCategory: bindActionCreators(categoryActions.selectCategory, dispatch),
+			getTitles: bindActionCreators(titleActions.getTitles, dispatch)
+		}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CategorySelect);
